@@ -1,4 +1,4 @@
-# MvM-Tweaks
+# MvM Patches
 
 ##Contains a few server patches for my MvM server
 
