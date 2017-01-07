@@ -1,0 +1,85 @@
+"Games"
+{
+	"tf"
+	{
+		"Addresses"
+		{
+			"Test"
+			{
+				"windows"
+				{
+					"signature" "CTFDroppedWeapon::Create"
+				}
+			}
+			"GetMaxHealthForCurrentLevel"	//"mult_engy_building_health"
+			{
+				"windows"
+				{
+					"signature" "CBaseObject::GetMaxHealthForCurrentLevel"
+				}
+			}
+			"SentryThink"	//"mult_sentry_range" / "SentrygunContext"
+			{
+				"windows"
+				{
+					"signature" "CObjectSentrygun::SentryThink"
+				}
+			}
+			"RadiusCurrencyCollectionCheck"	//"mult_health_fromhealers" / "overheal_fill_rate" xrefs to RadiusCurrencyCollectionCheck
+			{
+				"windows"
+				{
+					"signature"	"CTFPlayerShared::RadiusCurrencyCollectionCheck"
+				}
+			}
+		}
+		
+		"Signatures"
+		{
+			"CTFDroppedWeapon::Create"
+			{
+				"library"	"server"
+				"windows"	"\x55\x8B\xEC\xA1\x2A\x2A\x2A\x2A\x83\xEC\x08\x80\xB8\x66\x09\x00\x00\x00\x74\x2A"
+			}
+			"CTFDroppedWeapon::InitDroppedWeapon"
+			{
+				"library"	"server"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x24\x56\x57\x8B\xF9\x8B\x4D\x08"
+			}
+			"CBaseObject::GetMaxHealthForCurrentLevel"
+			{
+				"library"	"server"
+				"windows"	"\x55\x8B\xEC\x51\x56\x8B\xF1\x57\x80\xBE\x06\x0A\x00\x00\x00"
+			}
+			"CObjectSentrygun::SentryThink"
+			{
+				"library"	"server"
+				"windows"	"\x55\x8B\xEC\x51\x56\x8B\xF1\x57\x80\xBE\x07\x0A\x00\x00\x00"
+			}
+			"CTFPlayerShared::RadiusCurrencyCollectionCheck"
+			{
+				"library"	"server"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x38\x57\x8B\xF9\x89\x7D\xEC\x8B\x8F\x8C\x01\x00\x00"
+			}
+		}
+		"Offsets"
+		{
+			"TestingOffset"
+			{
+				"windows"	"11"
+			}
+			"GetMaxHealthForCurrentLevel39"
+			{
+				"windows"	"57"
+			}
+			"SentryThink71"
+			{
+				"windows"	"113"
+			}
+			"RadiusCurrencyCollectionCheck6E"
+			{
+				"windows"	"117"	//Help me
+			}
+		}
+	}
+}
