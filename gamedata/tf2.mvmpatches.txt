@@ -32,6 +32,20 @@
 					"signature"	"CTFPlayerShared::RadiusCurrencyCollectionCheck"
 				}
 			}
+			"PreClientUpdate"	//txt search: Setting sv_visiblemaxplayers to %d for MvM
+			{
+				"windows"
+				{
+					"signature"	"CTFGCServerSystem::PreClientUpdate"
+				}
+			}
+			"GetTeamAssignmentOverride"	//txt search: mvm assigned %s to defending team (%d more slots)
+			{
+				"windows"
+				{
+					"signature"	"CTFGameRules::GetTeamAssignmentOverride"
+				}
+			}
 		}
 		
 		"Signatures"
@@ -61,6 +75,16 @@
 				"library"	"server"
 				"windows"	"\x55\x8B\xEC\x83\xEC\x38\x57\x8B\xF9\x89\x7D\xEC\x8B\x8F\x8C\x01\x00\x00"
 			}
+			"CTFGCServerSystem::PreClientUpdate"
+			{
+				"library"	"server"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x20\x53\x56\x8B\xD9\x57\x89\x5D\xF4\xE8\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A"
+			}
+			"CTFGameRules::GetTeamAssignmentOverride"
+			{
+				"library"	"server"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x10\x81\x65\xF4\xFF\xFF\x0F\xFF\x8D\x45\xF0\x53"		
+			}
 		}
 		"Offsets"
 		{
@@ -78,7 +102,15 @@
 			}
 			"RadiusCurrencyCollectionCheck6E"
 			{
-				"windows"	"117"	//Help me
+				"windows"	"117"
+			}
+			"PreClientUpdate2C2"
+			{
+				"windows"	"708"	//Oh dear
+			}
+			"GetTeamAssignmentOverride14D"
+			{
+				"windows"	"333"
 			}
 		}
 	}
