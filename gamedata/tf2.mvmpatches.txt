@@ -4,13 +4,6 @@
 	{
 		"Addresses"
 		{
-			"Test"
-			{
-				"windows"
-				{
-					"signature" "CTFDroppedWeapon::Create"
-				}
-			}
 			"GetMaxHealthForCurrentLevel"	//"mult_engy_building_health"
 			{
 				"windows"
@@ -46,20 +39,28 @@
 					"signature"	"CTFGameRules::GetTeamAssignmentOverride"
 				}
 			}
+			"EstimateValidBuildPos"	//txt search: "func_tracktrain" and the func is in xrefd function of that.
+			{
+				"windows"
+				{
+					"signature"	"CBaseObject::EstimateValidBuildPos"
+				}
+				"linux"
+				{
+					"signature"	"CBaseObject::EstimateValidBuildPos"
+				}
+			}
+			"PreventBunnyJumping"	//txt search: "BumperCar.Jump"
+			{
+				"windows"
+				{
+					"signature"	"CTFGameMovement::PreventBunnyJumping"
+				}
+			}
 		}
 		
 		"Signatures"
 		{
-			"CTFDroppedWeapon::Create"
-			{
-				"library"	"server"
-				"windows"	"\x55\x8B\xEC\xA1\x2A\x2A\x2A\x2A\x83\xEC\x08\x80\xB8\x66\x09\x00\x00\x00\x74\x2A"
-			}
-			"CTFDroppedWeapon::InitDroppedWeapon"
-			{
-				"library"	"server"
-				"windows"	"\x55\x8B\xEC\x83\xEC\x24\x56\x57\x8B\xF9\x8B\x4D\x08"
-			}
 			"CBaseObject::GetMaxHealthForCurrentLevel"
 			{
 				"library"	"server"
@@ -85,13 +86,20 @@
 				"library"	"server"
 				"windows"	"\x55\x8B\xEC\x83\xEC\x10\x81\x65\xF4\xFF\xFF\x0F\xFF\x8D\x45\xF0\x53"		
 			}
+			"CBaseObject::EstimateValidBuildPos"
+			{
+				"library"	"server"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x10\x56\x8B\xF1\x8B\x06\xFF\x90\x14\x05\x00\x00"		
+				"linux"		"@_ZN11CBaseObject21EstimateValidBuildPosEv"
+			}
+			"CTFGameMovement::PreventBunnyJumping"
+			{
+				"library"	"server"
+				"windows"	"\x56\x8B\xF1\x6A\x52\x8B\x8E\xA8\x07\x00\x00\x81\xC1\x68\x19\x00\x00\xE8\x2A\x2A\x2A\x2A\x84\xC0\x75\x2A"		
+			}
 		}
 		"Offsets"
 		{
-			"TestingOffset"
-			{
-				"windows"	"11"
-			}
 			"GetMaxHealthForCurrentLevel39"
 			{
 				"windows"	"57"
@@ -108,9 +116,28 @@
 			{
 				"windows"	"708"	//Oh dear
 			}
+			"PreventBunnyJumping18"
+			{
+				"windows"	"24"
+			}
 			"GetTeamAssignmentOverride14D"
 			{
 				"windows"	"333"
+			}
+			"EstimateValidBuildPos6B"
+			{
+				"windows"	"107"
+				"linux"		"135"
+			}
+			"EstimateValidBuildPos8D"
+			{
+				"windows"	"141"
+				"linux"		"170"
+			}
+			"EstimateValidBuildPos_HowManyNOP"
+			{
+				"windows"	"13"
+				"linux"		"27"
 			}
 		}
 	}
