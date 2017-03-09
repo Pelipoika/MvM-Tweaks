@@ -2,7 +2,7 @@
 
 ##Contains a few server patches for my MvM server
 
-* **PreventBunnyJumping
+* **PreventBunnyJumping**
   * Removes bunnyhopping velocity limit
 * **GetMaxHealthForCurrentLevel patch**
   * Makes the building health upgrade apply to Disposable sentries
