@@ -6,10 +6,16 @@
 
 #pragma newdecls required
 
+Handle hConf;
+
 public void OnPluginStart()
 {
+	hConf = LoadGameConfigFile("tf2.mvmpatches");
+	if(hConf == INVALID_HANDLE)
+		SetFailState("Can't find tf2.mvmpatches gamedata.");
+
 	//Don't prevent BunnyJumping, a scuffed way of doing it but it works and is simple
-	MemoryPatch("PreventBunnyJumping", "PreventBunnyJumping18", {0x74, 0x7D}, 2);
+	MemoryPatch("PreventBunnyJumping", "PreventBunnyJumping18", {0x74}, 1);
 
 	//Make building max health upgrade apply to disposable sentries
 	MemoryPatch("GetMaxHealthForCurrentLevel", "GetMaxHealthForCurrentLevel39", {0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90}, 9);
@@ -26,14 +32,12 @@ public void OnPluginStart()
 	
 	//Patch mvm to allow more than 6 players to join the server
 	NumberPatch("PreClientUpdate", "PreClientUpdate2C2", 6, 10);
+	
+	delete hConf;
 }
 
 void MemoryPatch(const char[] patch, const char[] offset, int[] PatchBytes, int iCount)
 {
-	Handle hConf = LoadGameConfigFile("tf2.mvmpatches");
-	if(hConf == INVALID_HANDLE)
-		SetFailState("Can't find tf2.mvmpatches gamedata.");
-
 	Address iAddr = GameConfGetAddress(hConf, patch);
 	if(iAddr == Address_Null)
 	{
@@ -52,23 +56,17 @@ void MemoryPatch(const char[] patch, const char[] offset, int[] PatchBytes, int 
 	
 	for (int i = 0; i < iCount; i++)
 	{
-		int instruction = LoadFromAddress(iAddr + view_as<Address>(i), NumberType_Int8);
-		PrintToServer("0x%x %i", instruction, instruction);
+	//	int instruction = LoadFromAddress(iAddr + view_as<Address>(i), NumberType_Int8);
+	//	PrintToServer("0x%x %i", instruction, instruction);
 		
 		StoreToAddress(iAddr + view_as<Address>(i), PatchBytes[i], NumberType_Int8);
 	}
 	
 	PrintToServer("APPLIED PATCH: %s", patch);
-	
-	delete hConf;
 }
 
 void NumberPatch(const char[] patch, const char[] offset, int iOldValue, int iNewValue)
 {
-	Handle hConf = LoadGameConfigFile("tf2.mvmpatches");
-	if(hConf == INVALID_HANDLE)
-		SetFailState("Can't find tf2.mvmpatches gamedata.");
-
 	Address iAddr = GameConfGetAddress(hConf, patch);
 	if(iAddr == Address_Null)
 	{
@@ -94,8 +92,6 @@ void NumberPatch(const char[] patch, const char[] offset, int iOldValue, int iNe
 	{
 		PrintToServer("PATCH %s ALREADY APPLIED", patch);
 	}
-	
-	delete hConf;
 }
 
 /*
