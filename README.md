@@ -1,6 +1,6 @@
 # MvM Patches
 
-##Contains a few server patches for my MvM server
+# Contains a few server patches for my MvM server
 
 * **PreventBunnyJumping**
   * Removes bunnyhopping velocity limit
