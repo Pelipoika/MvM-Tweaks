@@ -41,17 +41,17 @@ void MemoryPatch(const char[] patch, const char[] offset, int[] PatchBytes, int 
 	Address iAddr = GameConfGetAddress(hConf, patch);
 	if(iAddr == Address_Null)
 	{
-		delete hConf;
-		SetFailState("Can't find %s address.", patch);
+		LogError("Can't find %s address.", patch);
+		return;
 	}
 	
 	int iOffset = GameConfGetOffset(hConf, offset);
 	if(iOffset == -1)
 	{
-		delete hConf;
-		SetFailState("Can't find %s in gamedata.", offset);
+		LogError("Can't find %s in gamedata.", offset);
+		return;
 	}
-
+	
 	iAddr += view_as<Address>(iOffset);
 	
 	for (int i = 0; i < iCount; i++)
@@ -70,14 +70,12 @@ void NumberPatch(const char[] patch, const char[] offset, int iOldValue, int iNe
 	Address iAddr = GameConfGetAddress(hConf, patch);
 	if(iAddr == Address_Null)
 	{
-		delete hConf;
 		SetFailState("Can't find %s address.", patch);
 	}
 	
 	int iOffset = GameConfGetOffset(hConf, offset);
 	if(iOffset == -1)
 	{
-		delete hConf;
 		SetFailState("Can't find %s in gamedata.", offset);
 	}
 	
