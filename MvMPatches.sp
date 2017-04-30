@@ -11,27 +11,29 @@ Handle hConf;
 public void OnPluginStart()
 {
 	hConf = LoadGameConfigFile("tf2.mvmpatches");
-	if(hConf == INVALID_HANDLE)
+	if(hConf == null)
 		SetFailState("Can't find tf2.mvmpatches gamedata.");
 
 	//Don't prevent BunnyJumping, a scuffed way of doing it but it works and is simple
 	MemoryPatch("PreventBunnyJumping", "PreventBunnyJumping18", {0x74}, 1);
 
 	//Make building max health upgrade apply to disposable sentries
-	MemoryPatch("GetMaxHealthForCurrentLevel", "GetMaxHealthForCurrentLevel39", {0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90}, 9);
+//	MemoryPatch("GetMaxHealthForCurrentLevel", "GetMaxHealthForCurrentLevel39", {0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90}, 9);
 
 	//Make sentries think every tick
-	MemoryPatch("SentryThink", "SentryThink71", {0x90, 0x90, 0x90, 0x90, 0x90, 0x90}, 6);
+//	MemoryPatch("SentryThink", "SentryThink71", {0x90, 0x90, 0x90, 0x90, 0x90, 0x90}, 6);
 
 	//Make every class have the currency collection radius effect	
-	//0F 93 Set byte if above or equal (CF=0).
-	MemoryPatch("RadiusCurrencyCollectionCheck", "RadiusCurrencyCollectionCheck6E", {0xF, 0x93}, 2);
+	//Replace the offset it checks ("m_iClass") for with "m_bClientSideAnimation" which should always be 1
+	int iOldOffset = FindSendPropInfo("CTFPlayer", "m_iClass");
+	int iNewOffset = FindSendPropInfo("CTFPlayer", "m_bClientSideAnimation");
+	NumberPatch("RadiusCurrencyCollectionCheck", "RadiusCurrencyCollectionCheck6E", iOldOffset, iNewOffset, NumberType_Int16);
 	
 	//Patch mvm automatic team assigning to allow more than 6 players on red team
-	NumberPatch("GetTeamAssignmentOverride", "GetTeamAssignmentOverride14D", 6, 10);
+	NumberPatch("GetTeamAssignmentOverride", "GetTeamAssignmentOverride14D", 6, 10, NumberType_Int8);
 	
 	//Patch mvm to allow more than 6 players to join the server
-	NumberPatch("PreClientUpdate", "PreClientUpdate2C2", 6, 10);
+	NumberPatch("PreClientUpdate", "PreClientUpdate2C2", 6, 10, NumberType_Int8);
 	
 	delete hConf;
 }
@@ -65,25 +67,35 @@ void MemoryPatch(const char[] patch, const char[] offset, int[] PatchBytes, int 
 	PrintToServer("APPLIED PATCH: %s", patch);
 }
 
-void NumberPatch(const char[] patch, const char[] offset, int iOldValue, int iNewValue)
+void NumberPatch(const char[] patch, const char[] offset, int iOldValue, int iNewValue, NumberType numtype = NumberType_Int8)
 {
 	Address iAddr = GameConfGetAddress(hConf, patch);
 	if(iAddr == Address_Null)
 	{
-		SetFailState("Can't find %s address.", patch);
+		LogError("Can't find %s address.", patch);
+		return;
 	}
 	
 	int iOffset = GameConfGetOffset(hConf, offset);
 	if(iOffset == -1)
 	{
-		SetFailState("Can't find %s in gamedata.", offset);
+		LogError("Can't find %s in gamedata.", offset);
+		return;
 	}
 	
 	iAddr += view_as<Address>(iOffset);
 	
-	if(LoadFromAddress(iAddr, NumberType_Int8) == iOldValue)
+/*	for (int i = 0; i < 4; i++)
 	{
-		StoreToAddress(iAddr, iNewValue, NumberType_Int8);
+		int instruction = LoadFromAddress(iAddr + view_as<Address>(i), numtype);
+		PrintToServer("%i = 0x%x %i", i, instruction, instruction);
+	}
+	
+	PrintToServer("old %i new %i", iOldValue, iNewValue);*/
+	
+	if(LoadFromAddress(iAddr, numtype) == iOldValue)
+	{
+		StoreToAddress(iAddr, iNewValue, numtype);
 		PrintToServer("APPLIED PATCH: %s", patch);
 	}
 	else

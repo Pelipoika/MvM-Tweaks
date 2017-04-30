@@ -78,7 +78,7 @@
 			"CTFPlayerShared::RadiusCurrencyCollectionCheck"
 			{
 				"library"	"server"
-				"windows"	"\x55\x8B\xEC\x83\xEC\x38\x57\x8B\xF9\x89\x7D\xEC\x8B\x8F\x8C\x01\x00\x00"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x38\x57\x8B\xF9\x89\x7D\xF0"
 			}
 			"CTFGCServerSystem::PreClientUpdate"
 			{
@@ -113,9 +113,9 @@
 			{
 				"windows"	"113"
 			}
-			"RadiusCurrencyCollectionCheck6E"
+			"RadiusCurrencyCollectionCheck6E"	//Now we just change the offset it checks for to m_bClientSideAnimation which is "always" 1
 			{
-				"windows"	"117"
+				"windows"	"112"
 			}
 			"PreClientUpdate2C2"
 			{
