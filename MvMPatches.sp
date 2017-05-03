@@ -21,7 +21,7 @@ public void OnPluginStart()
 //	MemoryPatch("GetMaxHealthForCurrentLevel", "GetMaxHealthForCurrentLevel39", {0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90}, 9);
 
 	//Make sentries think every tick
-//	MemoryPatch("SentryThink", "SentryThink71", {0x90, 0x90, 0x90, 0x90, 0x90, 0x90}, 6);
+	MemoryPatch("SentryThink", "SentryThink71", {0x90, 0x90, 0x90, 0x90, 0x90, 0x90}, 6);
 
 	//Make every class have the currency collection radius effect	
 	//Replace the offset it checks ("m_iClass") for with "m_bClientSideAnimation" which should always be 1

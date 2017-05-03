@@ -111,7 +111,7 @@
 			}
 			"SentryThink71"
 			{
-				"windows"	"113"
+				"windows"	"117"
 			}
 			"RadiusCurrencyCollectionCheck6E"	//Now we just change the offset it checks for to m_bClientSideAnimation which is "always" 1
 			{
