@@ -31,10 +31,18 @@
 				{
 					"signature"	"CTFGCServerSystem::PreClientUpdate"
 				}
+				"linux"
+				{
+					"signature"	"CTFGCServerSystem::PreClientUpdate"
+				}
 			}
 			"GetTeamAssignmentOverride"	//txt search: mvm assigned %s to defending team (%d more slots)
 			{
 				"windows"
+				{
+					"signature"	"CTFGameRules::GetTeamAssignmentOverride"
+				}
+				"linux"
 				{
 					"signature"	"CTFGameRules::GetTeamAssignmentOverride"
 				}
@@ -84,11 +92,13 @@
 			{
 				"library"	"server"
 				"windows"	"\x55\x8B\xEC\x83\xEC\x20\x53\x56\x8B\xD9\x57\x89\x5D\xF4\xE8\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A"
+				"linux"		"@_ZN17CTFGCServerSystem15PreClientUpdateEv"		
 			}
 			"CTFGameRules::GetTeamAssignmentOverride"
 			{
 				"library"	"server"
 				"windows"	"\x55\x8B\xEC\x83\xEC\x10\x81\x65\xF4\xFF\xFF\x0F\xFF\x8D\x45\xF0\x53"		
+				"linux"		"@_ZN12CTFGameRules25GetTeamAssignmentOverrideEP9CTFPlayerib"		
 			}
 			"CBaseObject::EstimateValidBuildPos"
 			{
@@ -120,15 +130,17 @@
 			"PreClientUpdate2C2"
 			{
 				"windows"	"708"	//Oh dear
+				"linux"		"1491"
+			}
+			"GetTeamAssignmentOverride14D"
+			{
+				"windows"	"333"
+				"linux"		"465"
 			}
 			"PreventBunnyJumping18"
 			{
 				"windows"	"24"
 				"linux"		"39"
-			}
-			"GetTeamAssignmentOverride14D"
-			{
-				"windows"	"333"
 			}
 			"EstimateValidBuildPos6B"
 			{
