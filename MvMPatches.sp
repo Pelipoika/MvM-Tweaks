@@ -17,11 +17,8 @@ public void OnPluginStart()
 	//Don't prevent BunnyJumping, a scuffed way of doing it but it works and is simple
 	MemoryPatch("PreventBunnyJumping", "PreventBunnyJumping18", {0x74}, 1);
 
-	//Make building max health upgrade apply to disposable sentries
-//	MemoryPatch("GetMaxHealthForCurrentLevel", "GetMaxHealthForCurrentLevel39", {0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90}, 9);
-
 	//Make sentries think every tick
-	MemoryPatch("SentryThink", "SentryThink71", {0x90, 0x90, 0x90, 0x90, 0x90, 0x90}, 6);
+//	MemoryPatch("SentryThink", "SentryThink71", {0x90, 0x90, 0x90, 0x90, 0x90, 0x90}, 6);
 
 	//Make every class have the currency collection radius effect	
 	//Replace the offset it checks ("m_iClass") for with "m_bClientSideAnimation" which should always be 1
@@ -32,6 +29,7 @@ public void OnPluginStart()
 	//Patch mvm automatic team assigning to allow more than 6 players on red team
 	NumberPatch("GetTeamAssignmentOverride", "GetTeamAssignmentOverride14D", 6, 10, NumberType_Int8);
 	
+	//PATCH PreClientUpdate ALREADY APPLIED
 	//Patch mvm to allow more than 6 players to join the server
 	NumberPatch("PreClientUpdate", "PreClientUpdate2C2", 6, 10, NumberType_Int8);
 	
@@ -58,8 +56,8 @@ void MemoryPatch(const char[] patch, const char[] offset, int[] PatchBytes, int 
 	
 	for (int i = 0; i < iCount; i++)
 	{
-	//	int instruction = LoadFromAddress(iAddr + view_as<Address>(i), NumberType_Int8);
-	//	PrintToServer("0x%x %i", instruction, instruction);
+		//int instruction = LoadFromAddress(iAddr + view_as<Address>(i), NumberType_Int8);
+		//PrintToServer("0x%x %i", instruction, instruction);
 		
 		StoreToAddress(iAddr + view_as<Address>(i), PatchBytes[i], NumberType_Int8);
 	}

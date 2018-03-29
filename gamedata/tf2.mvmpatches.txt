@@ -4,13 +4,6 @@
 	{
 		"Addresses"
 		{
-			"GetMaxHealthForCurrentLevel"	//"mult_engy_building_health"
-			{
-				"windows"
-				{
-					"signature" "CBaseObject::GetMaxHealthForCurrentLevel"
-				}
-			}
 			"SentryThink"	//"mult_sentry_range" / "SentrygunContext"
 			{
 				"windows"
@@ -47,17 +40,6 @@
 					"signature"	"CTFGameRules::GetTeamAssignmentOverride"
 				}
 			}
-			"EstimateValidBuildPos"	//txt search: "func_tracktrain" and the func is in xrefd function of that.
-			{
-				"windows"
-				{
-					"signature"	"CBaseObject::EstimateValidBuildPos"
-				}
-				"linux"
-				{
-					"signature"	"CBaseObject::EstimateValidBuildPos"
-				}
-			}
 			"PreventBunnyJumping"	//txt search: "BumperCar.Jump"
 			{
 				"windows"
@@ -73,11 +55,6 @@
 		
 		"Signatures"
 		{
-			"CBaseObject::GetMaxHealthForCurrentLevel"
-			{
-				"library"	"server"
-				"windows"	"\x55\x8B\xEC\x51\x56\x8B\xF1\x57\x80\xBE\x06\x0A\x00\x00\x00"
-			}
 			"CObjectSentrygun::SentryThink"
 			{
 				"library"	"server"
@@ -100,12 +77,6 @@
 				"windows"	"\x55\x8B\xEC\x83\xEC\x10\x81\x65\xF4\xFF\xFF\x0F\xFF\x8D\x45\xF0\x53"		
 				"linux"		"@_ZN12CTFGameRules25GetTeamAssignmentOverrideEP9CTFPlayerib"		
 			}
-			"CBaseObject::EstimateValidBuildPos"
-			{
-				"library"	"server"
-				"windows"	"\x55\x8B\xEC\x83\xEC\x10\x56\x8B\xF1\x8B\x06\xFF\x90\x14\x05\x00\x00"		
-				"linux"		"@_ZN11CBaseObject21EstimateValidBuildPosEv"
-			}
 			"CTFGameMovement::PreventBunnyJumping"
 			{
 				"library"	"server"
@@ -115,10 +86,6 @@
 		}
 		"Offsets"
 		{
-			"GetMaxHealthForCurrentLevel39"
-			{
-				"windows"	"57"
-			}
 			"SentryThink71"
 			{
 				"windows"	"117"
@@ -129,33 +96,16 @@
 			}
 			"PreClientUpdate2C2"
 			{
-				"windows"	"708"	//Oh dear
-				"linux"		"1491"
+				"windows"	"724"	//Oh dear
 			}
 			"GetTeamAssignmentOverride14D"
 			{
 				"windows"	"333"
-				"linux"		"465"
 			}
 			"PreventBunnyJumping18"
 			{
 				"windows"	"24"
 				"linux"		"39"
-			}
-			"EstimateValidBuildPos6B"
-			{
-				"windows"	"107"
-				"linux"		"135"
-			}
-			"EstimateValidBuildPos8D"
-			{
-				"windows"	"141"
-				"linux"		"170"
-			}
-			"EstimateValidBuildPos_HowManyNOP"
-			{
-				"windows"	"13"
-				"linux"		"27"
 			}
 		}
 	}
