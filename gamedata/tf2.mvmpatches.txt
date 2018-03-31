@@ -98,6 +98,10 @@
 			{
 				"windows"	"724"	//Oh dear
 			}
+			"PreClientUpdateSpecINC"	//Disable spectator count incrementation with a NOP
+			{
+				"windows"	"710"
+			}
 			"GetTeamAssignmentOverride14D"
 			{
 				"windows"	"333"

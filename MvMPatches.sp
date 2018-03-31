@@ -29,9 +29,11 @@ public void OnPluginStart()
 	//Patch mvm automatic team assigning to allow more than 6 players on red team
 	NumberPatch("GetTeamAssignmentOverride", "GetTeamAssignmentOverride14D", 6, 10, NumberType_Int8);
 	
-	//PATCH PreClientUpdate ALREADY APPLIED
 	//Patch mvm to allow more than 6 players to join the server
 	NumberPatch("PreClientUpdate", "PreClientUpdate2C2", 6, 10, NumberType_Int8);
+	
+	//Patch mvm adding spectator count to sv_visiblemaxplayers
+	MemoryPatch("PreClientUpdate", "PreClientUpdateSpecINC", {0x90}, 1);
 	
 	delete hConf;
 }
@@ -57,7 +59,7 @@ void MemoryPatch(const char[] patch, const char[] offset, int[] PatchBytes, int 
 	for (int i = 0; i < iCount; i++)
 	{
 		//int instruction = LoadFromAddress(iAddr + view_as<Address>(i), NumberType_Int8);
-		//PrintToServer("0x%x %i", instruction, instruction);
+		//PrintToServer("%s 0x%x %i", patch, instruction, instruction);
 		
 		StoreToAddress(iAddr + view_as<Address>(i), PatchBytes[i], NumberType_Int8);
 	}
@@ -90,7 +92,7 @@ void NumberPatch(const char[] patch, const char[] offset, int iOldValue, int iNe
 	}
 	
 	PrintToServer("old %i new %i", iOldValue, iNewValue);*/
-	
+		
 	if(LoadFromAddress(iAddr, numtype) == iOldValue)
 	{
 		StoreToAddress(iAddr, iNewValue, numtype);
