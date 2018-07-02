@@ -4,9 +4,17 @@
 #include <sdktools>
 #include <sdkhooks>
 
+#include <dhooks>
+#include <tf2_stocks>
+
 #pragma newdecls required
 
 Handle hConf;
+
+
+//Detours
+Handle hCreateEntityByName;
+Handle hAddItem;
 
 public void OnPluginStart()
 {
@@ -35,7 +43,163 @@ public void OnPluginStart()
 	//Patch mvm adding spectator count to sv_visiblemaxplayers
 	MemoryPatch("PreClientUpdate", "PreClientUpdateSpecINC", {0x90}, 1);
 	
+	//Remap item entity names so bots can be given multi-class weapons
+	//CreateEntityByName
+	hCreateEntityByName = DHookCreateDetour(Address_Null, CallConv_CDECL, ReturnType_CBaseEntity, ThisPointer_Address);
+	if (!hCreateEntityByName)
+		SetFailState("Failed to setup detour for CreateEntityByName");
+	
+	if (!DHookSetFromConf(hCreateEntityByName, hConf, SDKConf_Signature, "CreateEntityByName"))
+		SetFailState("Failed to load CreateEntityByName signature from gamedata");
+	
+	DHookAddParam(hCreateEntityByName, HookParamType_CharPtr); // *classname
+	DHookAddParam(hCreateEntityByName, HookParamType_Int); //iForceEdictIndex
+	
+	if (!DHookEnableDetour(hCreateEntityByName, false, CreateEntityByName_Dtor))
+		SetFailState("Failed to detour CreateEntityByName.");
+	
+	PrintToServer("Detoured CreateEntityByName!");
+	
+	//CTFBot::AddItem
+	hAddItem = DHookCreateDetour(Address_Null, CallConv_THISCALL, ReturnType_Void, ThisPointer_CBaseEntity);
+	if (!hAddItem)
+		SetFailState("Failed to setup detour for CTFBot::AddItem");
+	
+	if (!DHookSetFromConf(hAddItem, hConf, SDKConf_Signature, "CTFBot::AddItem"))
+		SetFailState("Failed to load CTFBot::AddItem signature from gamedata");
+	
+	DHookAddParam(hAddItem, HookParamType_CharPtr, .custom_register = DHookRegister_EBX); // *classname
+	DHookAddParam(hAddItem, HookParamType_Int); //something (Windows exclusive!)
+	
+	if (!DHookEnableDetour(hAddItem, false, CTFBot_AddItem_Dtor))
+		SetFailState("Failed to detour CTFBot::AddItem.");
+	
+	PrintToServer("Detoured CTFBot::AddItem!");
+	
 	delete hConf;
+}
+
+bool bTranslate = false;
+TFClassType bot_classnum = TFClass_Unknown;
+
+public MRESReturn CTFBot_AddItem_Dtor(int pThis, Handle hParams)
+{
+	//char strItemName[PLATFORM_MAX_PATH];	//Gives garbled string, propably beacuse of the custom register stuff
+	//DHookGetParamString(hParams, 1, strItemName, sizeof(strItemName));
+
+	bot_classnum = TF2_GetPlayerClass(pThis);
+	bTranslate = true;
+	
+	//PrintToServer("CTFBot::AddItem(%i (\"%N\")) class %i", pThis, pThis, bot_classnum);
+	
+	return MRES_Ignored;
+}
+
+public MRESReturn CreateEntityByName_Dtor(Address pThis, Handle hParams)
+{
+	char strClass[PLATFORM_MAX_PATH];
+	DHookGetParamString(hParams, 1, strClass, sizeof(strClass));
+	
+	if(bTranslate)
+	{
+		//PrintToServer("PRE CreateEntityByName(%s)", strClass);
+		
+		bool bWasTranslated = TranslateWeaponEntForClass(strClass, bot_classnum, strClass, sizeof(strClass));
+		
+		if(bWasTranslated) {
+			//PrintToServer("TRANSLATED CreateEntityByName(%s)", strClass);
+			
+			DHookSetParamString(hParams, 1, strClass);
+			
+			bTranslate = false;
+			
+			return MRES_ChangedHandled;
+		}	
+	}
+	
+	bTranslate = false;
+	
+	return MRES_Ignored;
+}
+
+stock bool TranslateWeaponEntForClass(const char[] name, TFClassType class, char[] buffer, int maxlength)
+{
+	if (StrEqual(name, "tf_weapon_shotgun")) 
+	{
+		switch (class) 
+		{
+			case TFClass_Soldier:  {strcopy(buffer, maxlength, "tf_weapon_shotgun_soldier"); return true;}
+			case TFClass_Pyro:     {strcopy(buffer, maxlength, "tf_weapon_shotgun_pyro");    return true;}
+			case TFClass_Heavy:    {strcopy(buffer, maxlength, "tf_weapon_shotgun_hwg");     return true;}
+			case TFClass_Engineer: {strcopy(buffer, maxlength, "tf_weapon_shotgun_primary"); return true;}
+			default:               {strcopy(buffer, maxlength, "tf_weapon_shotgun_primary"); return true;}
+		}
+	}
+	
+	if (StrEqual(name, "tf_weapon_pistol")) 
+	{
+		switch (class) 
+		{
+			case TFClass_Scout:    {strcopy(buffer, maxlength, "tf_weapon_pistol_scout"); return true;}
+			case TFClass_Engineer: {strcopy(buffer, maxlength, "tf_weapon_pistol");       return true;}
+		}
+	}
+	
+	if (StrEqual(name, "tf_weapon_shovel") || StrEqual(name, "tf_weapon_bottle")) 
+	{
+		switch (class) 
+		{
+			case TFClass_Soldier: {strcopy(buffer, maxlength, "tf_weapon_shovel"); return true;}
+			case TFClass_DemoMan: {strcopy(buffer, maxlength, "tf_weapon_bottle"); return true;}
+		}
+	}
+	
+	if (StrEqual(name, "saxxy")) 
+	{
+		switch (class)
+		{
+			case TFClass_Scout:    {strcopy(buffer, maxlength, "tf_weapon_bat");     return true;}
+			case TFClass_Soldier:  {strcopy(buffer, maxlength, "tf_weapon_shovel");  return true;}
+			case TFClass_Pyro:     {strcopy(buffer, maxlength, "tf_weapon_fireaxe"); return true;}
+			case TFClass_DemoMan:  {strcopy(buffer, maxlength, "tf_weapon_bottle");  return true;}
+			case TFClass_Heavy:    {strcopy(buffer, maxlength, "tf_weapon_fireaxe"); return true;}
+			case TFClass_Engineer: {strcopy(buffer, maxlength, "tf_weapon_wrench");  return true;}
+			case TFClass_Medic:    {strcopy(buffer, maxlength, "tf_weapon_bonesaw"); return true;}
+			case TFClass_Sniper:   {strcopy(buffer, maxlength, "tf_weapon_club");    return true;}
+			case TFClass_Spy:      {strcopy(buffer, maxlength, "tf_weapon_knife");   return true;}
+		}
+	}
+	
+	if (StrEqual(name, "tf_weapon_throwable")) 
+	{
+		switch (class) 
+		{
+			case TFClass_Medic: {strcopy(buffer, maxlength, "tf_weapon_throwable_primary");   return true;}
+			default:            {strcopy(buffer, maxlength, "tf_weapon_throwable_secondary"); return true;}
+		}
+	}
+	
+	if (StrEqual(name, "tf_weapon_parachute")) 
+	{
+		switch (class) 
+		{
+			case TFClass_Soldier: {strcopy(buffer, maxlength, "tf_weapon_parachute_secondary"); return true;}
+			case TFClass_DemoMan: {strcopy(buffer, maxlength, "tf_weapon_parachute_primary");   return true;}
+		}
+	}
+	
+	if (StrEqual(name, "tf_weapon_revolver")) 
+	{
+		switch (class) 
+		{
+			case TFClass_Engineer: {strcopy(buffer, maxlength, "tf_weapon_revolver_secondary"); return true;}
+		}
+	}
+	
+	/* if not handled: return original entity name, not an empty string */
+	strcopy(buffer, maxlength, name);
+	
+	return false;
 }
 
 void MemoryPatch(const char[] patch, const char[] offset, int[] PatchBytes, int iCount)

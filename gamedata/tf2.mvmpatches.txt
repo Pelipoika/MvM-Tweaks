@@ -83,6 +83,23 @@
 				"windows"	"\x56\x8B\xF1\x6A\x52\x8B\x8E\xA8\x07\x00\x00\x81\xC1\xA0\x19\x00\x00\xE8\x2A\x2A\x2A\x2A\x84\xC0\x75\x2A"		
 				"linux"		"@_ZN15CTFGameMovement19PreventBunnyJumpingEv"		
 			}
+			
+			"GTFGCClientSystem"	//"SendVoteResponseToGC" has string "Halloween.MerasmusHalloweenModeRare"
+			{
+				"library"	"server"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x14\xE8\x2A\x2A\x2A\x2A\x85\xC0"
+			}
+			
+			"CreateEntityByName"
+			{
+				"library"	"server"
+				"windows"	"\x55\x8B\xEC\x56\x8B\x75\x0C\x83\xFE\xFF"
+			}
+			"CTFBot::AddItem"
+			{
+				"library"	"server"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x5C\x56\x8B\xF1\x8D\x4D\xA4"
+			}
 		}
 		"Offsets"
 		{
