@@ -97,11 +97,11 @@ public MRESReturn CTFBot_AddItem_Dtor(int pThis, Handle hParams)
 
 public MRESReturn CreateEntityByName_Dtor(Address pThis, Handle hParams)
 {
-	char strClass[PLATFORM_MAX_PATH];
-	DHookGetParamString(hParams, 1, strClass, sizeof(strClass));
-	
 	if(bTranslate)
 	{
+		char strClass[PLATFORM_MAX_PATH];
+		DHookGetParamString(hParams, 1, strClass, sizeof(strClass));
+	
 		//PrintToServer("PRE CreateEntityByName(%s)", strClass);
 		
 		bool bWasTranslated = TranslateWeaponEntForClass(strClass, bot_classnum, strClass, sizeof(strClass));
