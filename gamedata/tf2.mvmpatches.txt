@@ -100,6 +100,18 @@
 				"library"	"server"
 				"windows"	"\x55\x8B\xEC\x83\xEC\x5C\x56\x8B\xF1\x8D\x4D\xA4"
 			}
+			
+			"CTFGameStats::Event_LevelInit"
+			{
+				"library"	"server"
+				"linux"		"@_ZN12CTFGameStats15Event_LevelInitEv"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x60\x53\x8B\xD9\x56\x57\x8B\x73\x74\x85\xF6\x74"
+			}
+			"CTFGameStats::FindPlayerStats"
+			{
+				"library"	"server"
+				"windows"	"\x55\x8B\xEC\x8B\x45\x08\x85\xC0\x75\x2A\x5D\xC2\x04\x00\x8B\x40\x18"
+			}
 		}
 		"Offsets"
 		{
